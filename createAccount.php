@@ -22,12 +22,10 @@ if($_SESSION["logged_in"] && isset($_POST['createAccountButton'])){
     $table = "accounts";
     $db = connectToDB($host, $user, $password, $database);
 
-    $query = "INSERT INTO ".$table." (directoryid, porfilepicname, accounttype) VALUES ";
-    $query .= "('{$dirid}', '{$imagename}', '{$accounttype}')";
-    /*profilepic,*/
-    //'{$imagedata}',
+    $query = "INSERT INTO ".$table." (directoryid, porfilepicname, profilepic, accounttype) VALUES ";
+    $query .= "('{$dirid}', '{$imagename}', '{$imagedata}', '{$accounttype}')";
     echo $query;
-    //echo $query;
+
 
     $result = mysqli_query($db, $query);
     if($result){
