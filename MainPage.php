@@ -9,7 +9,7 @@
 
     // get the username of the user that signed in
     if (isset($_SESSION['name'])){
-        $current_user = $_SESSION['name'];
+        $currentUser = $_SESSION['name'];
     }
 
     $sortBy = "";
