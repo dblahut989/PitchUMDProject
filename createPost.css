@@ -1,0 +1,10 @@
+fieldset {
+    border: 1px solid black;
+    width: 820px;
+}
+textarea {
+    background-color: transparent;
+    width: 800px;
+    height: 500px;
+}
+

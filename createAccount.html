@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+</head>
+<body>
+<section id="cover">
+    <div id="cover-caption">
+        <div id="container" class="container">
+            <div class="row">
+                <div class="col-sm-10 offset-sm-1 text-center"><br>
+                    <h1 class="display-3">We see it is your first time using Pitch UMD, please fill out some info for use.</h1>
+                    <div class="info-form">
+                        <form action="createAccount.php" enctype="multipart/form-data" method="post"><br>
+                            <strong>Type of Account: </strong><select name="accounttype">
+                                <option value="student">Student</option>
+                                <option value="professor">Professor</option>
+                                <option value="employee">Employee</option>
+                            </select><br><br>
+                            <strong>Upload a Profile Picture: </strong><input type="file" name="image" /><br><br>
+                            <input type="submit" name="createAccountButton" value="CREATE ACCOUNT"/>&nbsp &nbsp
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

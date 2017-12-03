@@ -26,37 +26,38 @@ $verify_user=ldap_bind($ldapconn,"uid=$login_nm,ou=people,dc=umd,dc=edu",$login_
 /* Returns 1 on Success */
 if ($verify_user != 1) {
     /* Failed */
-    echo "Invalid directoryId/password<br>";
+    echo "<h1>Invalid directoryId/password.</h1><br><h2>You will be redirect to the login page momentarily.</h2>";
+    echo "<script>setTimeout(\"location.href = 'login.html';\",2500);</script>";
 } else {
     /* Success */
     //Check if user has an entry in the database or not
     $host = "localhost";
-    $user = "accountsdbuser";
-    $password = "hellodb";
+    $user = "pitchdbuser";
+    $password = "goodbyeWorld";
     $database = "pitchumddb";
     $table = "accounts";
-    $query = "SELECT * FROM accounts WHERE directoryid IS ";
-    $query .= $login_nm;
+    $query = "SELECT 'directoryid' FROM ".$table." WHERE directoryid = '$login_nm'";
 
     $db = connectToDB($host, $user, $password, $database);
     $result = mysqli_query($db, $query);
 
-    if($result){
-        if(mysqli_num_rows($result) == 0){
-            //account does not yet exist, bring user to set up account page
-            header('Location: createAccount.html');
-        } else {
-            //account already exists, set session up and bring to home page
-            session_start();
-            $_SESSION['logged_in'] = true;
-            $_SESSION['name'] = $login_nm;
-            header('Location: homepage.html');
-        }
+    if(mysqli_num_rows($result) == 0){
+        //account does not yet exist, bring user to set up account page
+        session_start();
+        $_SESSION['logged_in'] = true;
+        $_SESSION['name'] = $login_nm;
+        header('Location: createAccount.html');
     } else {
-        //Something went wrong retrieving the records, have user try again
-        echo "Something went wrong retrieving the accounts records. Please try again.";
+        //account already exists, set session up and bring to home page
+        session_start();
+        $_SESSION['logged_in'] = true;
+        $_SESSION['name'] = $login_nm;
+        header('Location: homepage.html');
     }
+
+    mysqli_close($db);
 }
+
 
 function connectToDB($host, $user, $password, $database) {
     $db = new mysqli($host, $user, $password, $database);

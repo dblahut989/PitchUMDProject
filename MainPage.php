@@ -92,16 +92,16 @@
             $ser = $searchFor."=".$filter;
 
             if (gettype($searchFor) === "string"){
-            	$query = "select * from posts where $searchFor = '$filter' order by $sortBy";
+                $query = "select * from posts where $searchFor = '$filter' order by $sortBy";
             }else{
-            	$query = "select * from posts where $searchFor = $filter order by $sortBy";
+                $query = "select * from posts where $searchFor = $filter order by $sortBy";
             }
 
         }else{
-        	if (gettype($searchFor) === "string"){
-            	$query = "select * from posts where $searchFor = '$filter'";
+            if (gettype($searchFor) === "string"){
+                $query = "select * from posts where $searchFor = '$filter'";
             }else{
-            	$query = "select * from posts where $searchFor = $filter";
+                $query = "select * from posts where $searchFor = $filter";
             }
             
         }
@@ -113,8 +113,8 @@
             $query = "select * from posts order by $sortBy";
         }else{
 
-        	// if the user does not specify what to sort by or search for
-        	$query = "select * from posts order by date desc";
+            // if the user does not specify what to sort by or search for
+            $query = "select * from posts order by date desc";
 
         }
 
@@ -137,9 +137,9 @@
         $row = $result->fetch_array(MYSQLI_ASSOC);
 
         if (is_null($row['comments'])){
-        	$sendCom = "";
+            $sendCom = "";
         }else{
-        	$sendCom = $row['comments'];
+            $sendCom = $row['comments'];
         }
 
         $post_obj = new post($row['user'],$row['category'],$row['description'], $row['title'], $row['date'], $row['votes'], $sendCom, $row['id']);
@@ -159,10 +159,10 @@
                 <div class="container">
                     <div class = "row m-0">
                         <div class ="col-xs-4 col-md-3" id="left section">
-	                        <form action="createPost.html">
-	                        Create a Post!<br>
-	                        <input type="submit" value="Create Post">
-	                        </form>
+                            <form action="createPost.html">
+                            Create a Post!<br>
+                            <input type="submit" value="Create Post">
+                            </form>
                         </div>
                         <div class ="col-xs-4 col-md-6" id="middle section">
 BODY;
