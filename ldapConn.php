@@ -26,7 +26,8 @@ $verify_user=ldap_bind($ldapconn,"uid=$login_nm,ou=people,dc=umd,dc=edu",$login_
 /* Returns 1 on Success */
 if ($verify_user != 1) {
     /* Failed */
-    echo "Invalid directoryId/password<br>";
+    echo "<h1>Invalid directoryId/password.</h1><br><h2>You will be redirect to the login page momentarily.</h2>";
+    echo "<script>setTimeout(\"location.href = 'login.html';\",2500);</script>";
 } else {
     /* Success */
     //Check if user has an entry in the database or not
