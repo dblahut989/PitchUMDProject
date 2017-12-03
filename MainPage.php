@@ -1,75 +1,197 @@
 <?php
 
-	include 'PostObject.php';
+    include 'PostObject.php';
+    require_once "LoginInfo.php";
 
-	# call to function which creats the html header with whatever title is passed
-	$page = post::getHeader("Main Page");
+    session_start();
 
-	# setting the body of the html
-	$page .= <<<BODY
-			<body>
-				<form><br><br>
-	    			<h1 class="display-3 text-center"> Application System </h1><br><br>
-	    			<div class="container">
-	    				<div class = "row m-0">
-	    					<div class ="col-xs-4 col-md-3" id="left section">
-	    					This is where I imagine the create post section would go.
-	                		</div>
-	                		<div class ="col-xs-4 col-md-6" id="middle section">
-	                		<div class="panel panel-default" id="first" onmouseenter="expandPost(this)" onmouseleave="collapsePost(this)">
-	    					<table frame="box" width="500">
-								<tr><th> This is the title of the post</th></tr>
-								<tr><td> This is the decription of the post. This part shoule be a little longer.</td></tr>
-								<tr><td>Votes: 5 </td></tr>
-							</table><br>
-							</div>
-							<table width="500" border="1">
-								<tr><th> This is the title of the post</th></tr>
-								<tr><td> This is the decription of the post. This part shoule be a little longer than the first one.</td></tr>
-								<tr><td> &nbsp;&nbsp;&nbsp;&nbsp; vote up </td></tr>
-								<tr><td><strong>Comments</td></tr>
-								<tr><td>&nbsp; This is the first comment.</td></tr>
-								<tr></tr>
-								<tr><td>&nbsp; This is the second comment.</td></tr>
-							</table>
-	                		</div>
-	                		<div class ="col-xs-4 col-md-3" id="right section">
-	    					This is where I imagine the sorting of the posts would go.
-	                		</div>
-	                	</div>
-	                </div>
-	            </form>
-	        </body>
-	        <script>
-	        	"use strict";
-	        	main()
+    $currentUser = "bsisko";
 
-	        	function main(){
-	        		document.getElementById("left section").addEventListener("click",setMiddleText);
-	        	}
+    // get the username of the user that signed in
+    if (isset($_SESSION['name'])){
+        $current_user = $_SESSION['name'];
+    }
 
-	        	function setMiddleText(){
-	        		let mid = document.getElementById("middle section");
-	        	}
+    $sortBy = "";
+    $searchFor = "";
+    $filter = "";
+    $noData = false;
 
-	        	function makeAlert(){
-	        		alert("it was clicked");
-	        	}
+    # call to function which creates the html header with whatever title is passed
+    $page = post::getHeader("Main Page");
 
-	        	function expandPost(X){
+    // if we're coming from the sorting/searching page
+    if (isset($_POST['SortData'])){
+        $sortBy = $_POST['sortBy'];
+        $searchFor = $_POST['searchFor'];
+        $filter = $_POST['filter'];
+    }
 
-	        		X.innerHTML = "<table frame=\"box\" width=\"500\"><tr><th> This is the title of the post</th></tr><tr><td> This is the decription of the post. This part should be a little longer.</td></tr><tr><td><tr><td><strong>Comments</td></tr><tr><td>&nbsp; Writer1: This is the first comment.</td></tr><tr></tr><tr><td>&nbsp; Writer:2 This is the second comment.</td></tr><tr><td><textarea rows=\"4\" cols=\"65\"></textarea><br><input type=\"submit\" value=\"Enter Comment\"></td></tr></table>";
-	        	}
+    // if the user wants to edit the post, we will send the post id to the edit post page
+    if (isset($_POST['EditPost'])){
+       $_SESSION['editID'] = $_POST['ID'];
+       header('Location: editPost.php');
+    }
 
-	        	function collapsePost(X){
-	        		X.innerHTML = "<table frame=\"box\" width=\"500\"><tr><th> This is the title of the post</th></tr><tr><td> This is the decription of the post. This part shoule be a little longer.</td></tr><tr><td>Votes: 5 </td></tr></table><br>";
-	        	}
+    // connect to the database
+    $db_connection = new mysqli($host, $user, $password, $database);
+    if ($db_connection->connect_error) {
+          die($db_connection->connect_error);
+    }
 
-	        </script>
-	    </html>
-			
+    // if the user has submitted a comment, then it should be added to the comments in the database
+    if (isset($_POST['SubmitComment'])){
+
+        // ok it doesn't like apostrophes for some reason
+        // the comment to be added
+        $newComment = $_POST['NewComment'];
+        // the comments which currently exist for the post
+        $comments = $_POST['Comments'];
+
+        // add the new comment to the array
+        if ($comments != ""){
+            $comments .= "|";
+        }
+
+        $comments .= $currentUser.":".$newComment;
+        // the id # of the post (its the only unique feature o the )
+        $id = $_POST['ID'];
+        $query = "update posts set comments=\"$comments\" where id= '$id'";
+
+        $result = $db_connection->query($query);
+        if (!$result) {
+            die("Update failed: " . $db_connection->error);
+        } 
+    }
+
+    // if the user has submitted a comment, then it should be added to the comments in the database
+    if (isset($_POST['Voting'])){
+
+        // the comment to be added
+        $num_votes = $_POST['NumVotes'];
+        // the comments which currently exist for the post, in serialized form
+        $num_votes++;
+        
+        // the id # of the post (its the only unique feature o the )
+        $id = $_POST['ID'];
+        $query = "update posts set votes=$num_votes where id= '$id'";
+
+        $result = $db_connection->query($query);
+        if (!$result) {
+            die("Update failed: " . $db_connection->error);
+        } 
+    }
+
+    // if the user wants to search for something 
+    if ($searchFor){
+
+        // if the user wants to sort also
+         if ($sortBy){
+            echo $sortBy;
+            echo $filter;
+            $ser = $searchFor."=".$filter;
+
+            if (gettype($searchFor) === "string"){
+            	$query = "select * from posts where $searchFor = '$filter' order by $sortBy";
+            }else{
+            	$query = "select * from posts where $searchFor = $filter order by $sortBy";
+            }
+
+        }else{
+        	if (gettype($searchFor) === "string"){
+            	$query = "select * from posts where $searchFor = '$filter'";
+            }else{
+            	$query = "select * from posts where $searchFor = $filter";
+            }
+            
+        }
+
+    }else{
+
+        // if the user wants to sort by something
+        if ($sortBy){
+            $query = "select * from posts order by $sortBy";
+        }else{
+
+        	// if the user does not specify what to sort by or search for
+        	$query = "select * from posts order by date desc";
+
+        }
+
+    }
+
+    $result = $db_connection->query($query);
+    if (!$result) {
+        die("Extraction failed: " . $db_connection->error);
+    } 
+
+    # Closing connection 
+    $db_connection->close();
+
+    $post_array = [];
+
+    // extract all the rows in the DB and put them into an array
+    $num_rows = $result->num_rows;
+    for ($i = 0; $i < $num_rows; $i++){
+        $result->data_seek($i);
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+        if (is_null($row['comments'])){
+        	$sendCom = "";
+        }else{
+        	$sendCom = $row['comments'];
+        }
+
+        $post_obj = new post($row['user'],$row['category'],$row['description'], $row['title'], $row['date'], $row['votes'], $sendCom, $row['id']);
+       
+        $post_array[] = $post_obj;
+    }
+
+    // if there is no data
+    if ($num_rows == 0){
+        $noData = true;
+    }
+
+    # setting the body of the html
+    $page .= <<<BODY
+            <body>
+                <h1 class="display-3 text-center"> Pitch Your Ideas! </h1><br><br>
+                <div class="container">
+                    <div class = "row m-0">
+                        <div class ="col-xs-4 col-md-3" id="left section">
+	                        <form action="createPost.html">
+	                        Create a Post!<br>
+	                        <input type="submit" value="Create Post">
+	                        </form>
+                        </div>
+                        <div class ="col-xs-4 col-md-6" id="middle section">
 BODY;
 
-	echo $page;
+    if ($noData){
+        $page .= "No posts found.";
+    }
+
+    // load the post objects in to the HTML
+    foreach($post_array as $post_elem){
+        $page .= $post_elem->getPostHTML($currentUser);
+        $page .= "<br>";
+    } 
+
+    $page .= <<<BOTTOM
+            </div>
+            <div class ="col-xs-4 col-md-3" id="right section">
+                            <form action="searchPosts.html">
+                                Search/Sort Posts.<br>
+                                <input type="submit" value="Create Post">
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+            </body>
+        </html>
+
+BOTTOM;
+
+    echo $page;
 
 ?>
