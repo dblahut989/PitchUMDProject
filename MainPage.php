@@ -182,7 +182,7 @@ BODY;
             <div class ="col-xs-4 col-md-3" id="right section">
                             <form action="searchPosts.html">
                                 Search/Sort Posts.<br>
-                                <input type="submit" value="Create Post">
+                                <input type="submit" value="Search/Sort Posts">
                             </form>
                             </div>
                         </div>
