@@ -1,0 +1,34 @@
+<?php
+session_start();
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Post</title>
+        <link rel="stylesheet" href="createPost.css">
+        <script src="createPostValidation.js"></script>
+    </head>
+    <body>
+        <form action="createPost.php" method="post">
+            <h1><Strong>Pitch your idea</Strong></h1>
+            <fieldset>
+                <Strong>Titile: </Strong><input type="text" name="title" id="title" size="50">
+                <Strong>Category: </Strong>
+                <select name="category">
+                    <option value="cate1">Cate1</option>
+                    <option value="cate2">Cate2</option>
+                    <option value="cate3">Cate3</option>
+                </select><br /><br />
+            </fieldset><br />
+            <fieldset>
+                <Strong>Description:</Strong><br /><br />
+                <textarea name="content" id ="content"></textarea><br /><br />
+                <input type="submit" name="submit" value="Post" style="float: right;">
+                <input type="submit" name="returnHome" value="Return to home" style="float: right; margin-right:10px;">
+            </fieldset>
+        </form>
+
+    </body>
+</html>
