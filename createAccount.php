@@ -22,17 +22,23 @@ if($_SESSION["logged_in"] && isset($_POST['createAccountButton'])){
     $table = "accounts";
     $db = connectToDB($host, $user, $password, $database);
 
-    $query = "INSERT INTO ".$table." (directoryid, porfilepicname, profilepic, accounttype) VALUES ";
+    $query = "insert into $table (directoryid, profilepicname, profilepic, accounttype) values ";
     $query .= "('{$dirid}', '{$imagename}', '{$imagedata}', '{$accounttype}')";
-    echo $query;
 
+    //profilepic,
+    //{$imagedata},
+    //echo $query;
 
-    $result = mysqli_query($db, $query);
+    $result = mysqli_query($db,$query) or trigger_error(mysqli_error($db)." ".$query);
     if($result){
         echo "Added ".$imagename;
+        echo "<script>setTimeout(\"location.href = 'MainPage.php';\",1500);</script>";
     } else{
-        echo "Failed to add ".$imagename;
+        echo "Failed to add ".$imagename." please try again.";
+        echo "<script>setTimeout(\"location.href = 'createAccount.html';\",1500);</script>";
     }
+} else {
+    header("Location:login.html");
 }
 
 function connectToDB($host, $user, $password, $database) {
