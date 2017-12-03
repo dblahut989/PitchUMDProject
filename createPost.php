@@ -6,35 +6,35 @@
 
     if(isset($_POST['backToMain'])) {
         header('Location: MainPage.php');
-    }
-
-
-    $date = date_create();
-    $date = $date->format('Y-m-d');
-
-    $head = "Your idea is posted";
-
-    $db_connection = new mysqli($host, $user, $password, $database);
-    if ($db_connection->connect_error) {
-        die($db_connection->connect_error);
-    }
-
-    $user = $_SESSION['name'];
-    $title = $_POST['title'];
-    $category = $_POST['category'];
-    $description = $_POST['content'];
-    $comments = "";
-    $votes = 0;
-    $id = 0; //number will be automatically increased in database unique post id
-
-    $query = "insert into posts values ($id, \"$user\", \"$title\", \"$category\", \"$description\", \"$date\", \"$comments\", $votes)";
-    $result = $db_connection->query($query);
-    if ($result) {
     } else {
-        die("Insertion failed: " . $db_connection->error);
-    }
+        $date = date_create();
+        $date = $date->format('Y-m-d');
 
-    $db_connection->close();
+        $head = "Your idea is posted";
+
+        $db_connection = new mysqli($host, $user, $password, $database);
+    
+     if ($db_connection->connect_error) {
+            die($db_connection->connect_error);
+        }
+
+        $user = $_SESSION['name'];
+        $title = $_POST['title'];
+        $category = $_POST['category'];
+        $description = $_POST['content'];
+        $comments = "";
+        $votes = 0;
+        $id = 0; //number will be automatically increased in database unique post id
+
+        $query = "insert into posts values ($id, \"$user\", \"$title\", \"$category\", \"$description\", \"$date\", \"$comments\", $votes)";
+        $result = $db_connection->query($query);
+        if ($result) {
+        } else {
+            die("Insertion failed: " . $db_connection->error);
+        }
+
+        $db_connection->close();
+    }
 
     $body = <<<EOBODY
         <html lang="en">
