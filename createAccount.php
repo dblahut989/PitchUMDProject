@@ -31,7 +31,7 @@ if($_SESSION["logged_in"] && isset($_POST['createAccountButton'])){
 
     $result = mysqli_query($db,$query) or trigger_error(mysqli_error($db)." ".$query);
     if($result){
-        echo "Added ".$imagename;
+        echo "<h1>Thank you! Account creation successful. </h1> <br> <h1> You will be redirected to the homepage momentarily.</h1>";
         echo "<script>setTimeout(\"location.href = 'MainPage.php';\",1500);</script>";
     } else{
         echo "Failed to add ".$imagename." please try again.";
