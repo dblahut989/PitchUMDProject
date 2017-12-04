@@ -76,7 +76,7 @@ BODY;
 			} 
 
 			
-			$code .= "<br>Comments:<br>";
+			$code .= "<br><strong>Comments:</strong><br>";
 			if ($comm !== ""){
 				
 				$comArray = explode("|",$comm);

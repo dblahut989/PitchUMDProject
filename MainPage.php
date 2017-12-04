@@ -144,7 +144,7 @@
     # setting the body of the html
     $page .= <<<BODY
             <body><br>
-                <h1 class="display-3 text-center"> Pitch Your Ideas! </h1><br><br>
+                <h1 class="display-3 text-center text-danger"> Pitch Your Ideas to Improve UMD! </h1><br><br>
                 <div class="container">
                     <div class = "row m-0">
                         <div class ="col-xs-4 col-md-3" id="left section">
@@ -194,7 +194,7 @@ BODY;
                                               <option value="votes">Votes</option>
                                             </select><br>
                                             <br><input type="submit" name="SortData" value="Submit Request"></td></tr></table>
-                                        </form><br><br><br><br><br><br>
+                                        </form><br><br><br><br><br><br><br>
                                         <img src="images/football.jpg" alt="not found" width="250" height="300"><br><br>
                                         <img src="images/testudoBasketball.jpg" alt="not found" width="250" height="300"><br><br>
                                         <img src="images/wball.jpg" alt="not found" width="250" height="300"><br><br>
