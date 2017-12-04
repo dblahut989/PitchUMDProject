@@ -2,11 +2,10 @@
 
     include 'PostObject.php';
     require_once "LoginInfo.php";
+    require_once "dbLogin.php";
 
     session_start();
-
-    $currentUser = "bsisko";
-
+    
     // get the username of the user that signed in
     if (isset($_SESSION['name'])){
         $current_user = $_SESSION['name'];
@@ -19,13 +18,6 @@
 
     # call to function which creates the html header with whatever title is passed
     $page = post::getHeader("Main Page");
-
-    // if we're coming from the sorting/searching page
-    if (isset($_POST['SortData'])){
-        $sortBy = $_POST['sortBy'];
-        $searchFor = $_POST['searchFor'];
-        $filter = $_POST['filter'];
-    }
 
     // if the user wants to edit the post, we will send the post id to the edit post page
     if (isset($_POST['EditPost'])){
@@ -54,7 +46,7 @@
             $oldComments .= "|";
         }
 
-        $addComments = $oldComments .$currentUser.": ".$newComment;
+        $addComments = $oldComments .$current_user.": ".$newComment;
         // the id # of the post (its the only unique feature o the )
         $id = $_POST['ID'];
         $query = "update posts set comments=\"$addComments\" where id= '$id'";
@@ -84,41 +76,37 @@
     }
 
     // if the user wants to search for something 
-    if ($searchFor){
+    if (isset($_POST['SortData'])){
 
-        // if the user wants to sort also
-         if ($sortBy){
-          
-            $ser = $searchFor."=".$filter;
+        $sortBy = $_POST['sortBy'];
+        $searchFor = $_POST['searchFor'];
+        $filter = $_POST['filter'];
 
-            if (gettype($searchFor) === "string"){
-            	$query = "select * from posts where $searchFor = '$filter' order by $sortBy";
-            }else{
-            	$query = "select * from posts where $searchFor = $filter order by $sortBy";
-            }
+        if ($searchFor == "None"){
 
-        }else{
-        	if (gettype($searchFor) === "string"){
-            	$query = "select * from posts where $searchFor = '$filter'";
-            }else{
-            	$query = "select * from posts where $searchFor = $filter";
-            }
-            
-        }
-
-    }else{
-
-        // if the user wants to sort by something
-        if ($sortBy){
             $query = "select * from posts order by $sortBy";
-        }else{
 
-        	// if the user does not specify what to sort by or search for
-        	$query = "select * from posts order by date desc";
+        } else{
+
+            if ($filter){
+
+                if (gettype($searchFor) === "string"){
+                    $query = "select * from posts where $searchFor = '$filter' order by $sortBy";
+                }else{
+                    $query = "select * from posts where $searchFor = $filter order by $sortBy";
+                }
+
+            } else{
+                $query = "select $searchFor from posts order by $sortBy";
+            }
 
         }
 
+    } else{
+        // if the user does not specify what to sort by or search for
+        $query = "select * from posts order by date desc";
     }
+
 
     $result = $db_connection->query($query);
     if (!$result) {
@@ -155,15 +143,20 @@
 
     # setting the body of the html
     $page .= <<<BODY
-            <body>
+            <body><br>
                 <h1 class="display-3 text-center"> Pitch Your Ideas! </h1><br><br>
                 <div class="container">
                     <div class = "row m-0">
                         <div class ="col-xs-4 col-md-3" id="left section">
-	                        <form action="createPost.html">
-	                        Create a Post!<br>
+	                        <form action="createPost.html"><br>
+	                        <strong><em>Create a Post!</em></strong><br><br>
 	                        <input type="submit" value="Create Post">
-	                        </form>
+	                        </form><br><br>
+                            <img src="images/FlowerM.jpg" alt="not found" width="250" height="300"><br><br>
+                            <img src="images/melo.jpg" alt="not found" width="250" height="300"><br><br>
+                            <img src="images/testFoot.jpg" alt="not found" width="250" height="300"><br><br>
+                            <img src="images/jousting.jpg" alt="not found" width="250" height="300"><br><br>
+                            <img src="images/mall.jpg" alt="not found" width="250" height="300"><br><br>
                         </div>
                         <div class ="col-xs-4 col-md-6" id="middle section">
 BODY;
@@ -174,17 +167,38 @@ BODY;
 
     // load the post objects in to the HTML
     foreach($post_array as $post_elem){
-        $page .= $post_elem->getPostHTML($currentUser);
+        $page .= $post_elem->getPostHTML($current_user);
         $page .= "<br>";
     } 
 
     $page .= <<<BOTTOM
             </div>
             <div class ="col-xs-4 col-md-3" id="right section">
-                            <form action="searchPosts.html">
-                                Search/Sort Posts<br>
-                                <input type="submit" value="Sort/Search">
-                            </form>
+                            <form action="MainPage.php" method="post">
+                                            <br><strong><em>Search or Sort Posts</em></strong>
+                                            <table>
+                                            <tr><td><br><strong>Search By: </strong><br>
+                                            <select name="searchFor">
+                                              <option value="None"></option>
+                                              <option value="User">User</option>
+                                              <option value="Category">Category</option>
+                                              <option value="Title">Title</option>
+                                            </select></td></tr>
+                                            <tr><td><br><strong>Search For: </strong><br><input type="text" name="filter" /><br><br></td></tr>
+                                            <tr><td><strong>Sort By:</strong><br>
+                                            <select name="sortBy">
+                                              <option value="date">Date</option>
+                                              <option value="user">User</option>
+                                              <option value="category">Category</option>
+                                              <option value="title">Title</option>
+                                              <option value="votes">Votes</option>
+                                            </select><br>
+                                            <br><input type="submit" name="SortData" value="Submit Request"></td></tr></table>
+                                        </form><br><br><br><br><br><br>
+                                        <img src="images/football.jpg" alt="not found" width="250" height="300"><br><br>
+                                        <img src="images/testudoBasketball.jpg" alt="not found" width="250" height="300"><br><br>
+                                        <img src="images/wball.jpg" alt="not found" width="250" height="300"><br><br>
+                                        <img src="images/walkers.jpg" alt="not found" width="250" height="300"><br><br>
                             </div>
                         </div>
                     </div>

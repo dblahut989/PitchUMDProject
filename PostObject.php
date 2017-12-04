@@ -57,12 +57,13 @@
 						$desc<br><br>
 						<em>Votes: $v</em>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<input type="submit" name="Voting" value="Vote This Idea Up"><br>
+						<input type="submit" name="Voting" value="Vote For This Idea"><br>
 						<input type="hidden" name="ID" value=$id>
 						<input type="hidden" name="Comments" value='$comm'>
 						<input type="hidden" name="NumVotes" value=$v>
 
 BODY;
+
 			if ($currentUser === $this->user){
 				for ($i = 0; $i < 90; $i++){
 					$code .= "&nbsp;";
@@ -96,7 +97,7 @@ BODY;
 			<br>
 			<textarea rows="4" cols="68" name="NewComment"></textarea>
 			<input type="submit" name="SubmitComment" value="Submit Comment">
-			</form><br>
+			</form><br><br>
 			</div>
 BODY;
 

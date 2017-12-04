@@ -10,7 +10,7 @@ require_once "dbLogin.php";
 
     session_start();
 
-    $id=9;//$_SESSION['editId'];
+    $id=$_SESSION['editID'];
 
     $db_connection = new mysqli($host, $user, $password, $database);
     if ($db_connection->connect_error) {
@@ -34,15 +34,13 @@ require_once "dbLogin.php";
         $sql = "UPDATE posts SET title=\"$title\", description=\"$description\", category=\"$category\" WHERE id=$id";
         $result = $db_connection->query($sql);
         if ($result) {
-            // send to main page
+            header("Location: MainPage.php");
         } else {
             die("Insertion failed: " . $db_connection->error);
         }
 
         $db_connection->close();
 
-    } else if(isset($_POST['cancel'])) {
-        // send to previous page
     }
 
     $body = <<<EOBODY
@@ -50,12 +48,12 @@ require_once "dbLogin.php";
     <head>
         <meta charset="UTF-8">
         <title>Create Post</title>
-        <link rel="stylesheet" href="createPost.css">
+        <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
         <script src="createPostValidation.js"></script>
     </head>
     <body>
         <form action="editPost.php" method="post">
-            <fieldset>
+            <div class="well">
                 <Strong>Titile: </Strong><input type="text" name="title" id="title" size="50" value=$title>
                 <Strong>Category: </Strong>                    
                 <select name="category">
@@ -66,14 +64,15 @@ require_once "dbLogin.php";
                     }else {
                         <option value=cate3 selected="selected">Cate3</option>
                     }                           
-                </select><br /><br />                
-            </fieldset><br />
-            <fieldset>
+                </select><br />                
+            </div>
+            <div class="well">
                 <Strong>Description:</Strong><br /><br />
-                <textarea name="description" id ="content">$description</textarea><br /><br />
-                <input type="submit" name="post" value="Posting" style="float: right;">
-                <input type="submit" name="cancel" value="Cancel" style="float: right; margin-right:10px;">
-            </fieldset>
+                <textarea class="form-control" name="description" rows="12" id ="content">$description</textarea><br /><br />
+                <div class="text-right">
+                    <input class="btn-info btn" type="submit" name="post" value="Posting">
+                </div>               
+            </div>
         </form>
     </body>
     </html>
