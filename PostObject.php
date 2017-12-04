@@ -23,6 +23,7 @@
 			$this->date = $date;
 			$this->votes = $votes;
 			$this->id_num = $id;
+
 		}
 
 		public function get_user(){
@@ -58,7 +59,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<input type="submit" name="Voting" value="Vote This Idea Up"><br>
 						<input type="hidden" name="ID" value=$id>
-						<input type="hidden" name="Comments" value=$comm>
+						<input type="hidden" name="Comments" value='$comm'>
 						<input type="hidden" name="NumVotes" value=$v>
 
 BODY;
@@ -73,20 +74,22 @@ BODY;
 BODY;
 			} 
 
+			
 			$code .= "<br>Comments:<br>";
 			if ($comm !== ""){
-				echo "com was ".$comm;
+				
 				$comArray = explode("|",$comm);
 				foreach ($comArray as $comment){
-					/*
+					
 					$splitUp = explode(":",$comment);
 					$commenter = $splitUp[0];
 					$message = $splitUp[1];
-					$code .= "<div class=\"rounding\"<em>$commenter</em>: $message</td></tr></div>"; */
-					$code .= "<div class=\"rounding\"> $comment </div>";
+					$code .= <<<BODY
+						<div class="rounding" <strong>$commenter</strong>: $message</div> 
+BODY;
 				}
 
-			}
+			} 
 			
 			$code .= <<<BODY
 

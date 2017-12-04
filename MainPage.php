@@ -9,7 +9,7 @@
 
     // get the username of the user that signed in
     if (isset($_SESSION['name'])){
-        $currentUser = $_SESSION['name'];
+        $current_user = $_SESSION['name'];
     }
 
     $sortBy = "";
@@ -45,18 +45,19 @@
         // ok it doesn't like apostrophes for some reason
         // the comment to be added
         $newComment = $_POST['NewComment'];
-        // the comments which currently exist for the post
-        $comments = $_POST['Comments'];
 
-        // add the new comment to the array
-        if ($comments != ""){
-            $comments .= "|";
+        // the comments which currently exist for the post
+        $oldComments = $_POST['Comments'];
+
+     	//
+        if ($oldComments !== ""){
+            $oldComments .= "|";
         }
 
-        $comments .= $currentUser.":".$newComment;
+        $addComments = $oldComments .$currentUser.": ".$newComment;
         // the id # of the post (its the only unique feature o the )
         $id = $_POST['ID'];
-        $query = "update posts set comments=\"$comments\" where id= '$id'";
+        $query = "update posts set comments=\"$addComments\" where id= '$id'";
 
         $result = $db_connection->query($query);
         if (!$result) {
@@ -87,21 +88,20 @@
 
         // if the user wants to sort also
          if ($sortBy){
-            echo $sortBy;
-            echo $filter;
+          
             $ser = $searchFor."=".$filter;
 
             if (gettype($searchFor) === "string"){
-                $query = "select * from posts where $searchFor = '$filter' order by $sortBy";
+            	$query = "select * from posts where $searchFor = '$filter' order by $sortBy";
             }else{
-                $query = "select * from posts where $searchFor = $filter order by $sortBy";
+            	$query = "select * from posts where $searchFor = $filter order by $sortBy";
             }
 
         }else{
-            if (gettype($searchFor) === "string"){
-                $query = "select * from posts where $searchFor = '$filter'";
+        	if (gettype($searchFor) === "string"){
+            	$query = "select * from posts where $searchFor = '$filter'";
             }else{
-                $query = "select * from posts where $searchFor = $filter";
+            	$query = "select * from posts where $searchFor = $filter";
             }
             
         }
@@ -113,8 +113,8 @@
             $query = "select * from posts order by $sortBy";
         }else{
 
-            // if the user does not specify what to sort by or search for
-            $query = "select * from posts order by date desc";
+        	// if the user does not specify what to sort by or search for
+        	$query = "select * from posts order by date desc";
 
         }
 
@@ -137,11 +137,12 @@
         $row = $result->fetch_array(MYSQLI_ASSOC);
 
         if (is_null($row['comments'])){
-            $sendCom = "";
+        	$sendCom = "";
         }else{
-            $sendCom = $row['comments'];
+        	$sendCom = $row['comments'];
         }
 
+        // I think its here that it fucks up, somewhere around here
         $post_obj = new post($row['user'],$row['category'],$row['description'], $row['title'], $row['date'], $row['votes'], $sendCom, $row['id']);
        
         $post_array[] = $post_obj;
@@ -159,10 +160,10 @@
                 <div class="container">
                     <div class = "row m-0">
                         <div class ="col-xs-4 col-md-3" id="left section">
-                            <form action="createPost.html">
-                            Create a Post!<br>
-                            <input type="submit" value="Create Post">
-                            </form>
+	                        <form action="createPost.html">
+	                        Create a Post!<br>
+	                        <input type="submit" value="Create Post">
+	                        </form>
                         </div>
                         <div class ="col-xs-4 col-md-6" id="middle section">
 BODY;
@@ -181,8 +182,8 @@ BODY;
             </div>
             <div class ="col-xs-4 col-md-3" id="right section">
                             <form action="searchPosts.html">
-                                Search/Sort Posts.<br>
-                                <input type="submit" value="Search/Sort Posts">
+                                Search/Sort Posts<br>
+                                <input type="submit" value="Sort/Search">
                             </form>
                             </div>
                         </div>
