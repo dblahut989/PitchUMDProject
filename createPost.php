@@ -8,6 +8,8 @@
         header('Location: MainPage.php');
     } else {
         $date = date_create();
+        $date2 = date_timestamp_get($date);
+        
         $date = $date->format('Y-m-d');
 
         $head = "Your idea is posted";
@@ -26,7 +28,7 @@
         $votes = 0;
         $id = 0; //number will be automatically increased in database unique post id
 
-        $query = "insert into posts values ($id, \"$user\", \"$title\", \"$category\", \"$description\", \"$date\", \"$comments\", $votes)";
+        $query = "insert into posts values ($id, \"$user\", \"$title\", \"$category\", \"$description\", \"$date2\", \"$comments\", $votes)";
         $result = $db_connection->query($query);
         if ($result) {
         } else {
